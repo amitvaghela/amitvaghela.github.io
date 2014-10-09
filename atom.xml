@@ -4,7 +4,7 @@
   <title><![CDATA[My Blog]]></title>
   <link href="http://amitvaghela.github.io/atom.xml" rel="self"/>
   <link href="http://amitvaghela.github.io/"/>
-  <updated>2014-10-03T22:54:33+10:00</updated>
+  <updated>2014-10-09T23:46:05+11:00</updated>
   <id>http://amitvaghela.github.io/</id>
   <author>
     <name><![CDATA[Amit Vaghela]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Server Trust Evaluation Has Failed]]></title>
+    <link href="http://amitvaghela.github.io/blog/2014/10/09/server-trust-evaluation-has-failed/"/>
+    <updated>2014-10-09T23:36:15+11:00</updated>
+    <id>http://amitvaghela.github.io/blog/2014/10/09/server-trust-evaluation-has-failed</id>
+    <content type="html"><![CDATA[<p>While working iOS app I faced an issue when app was making a connection to API endpoint. After investigation I found that it was happening because of server trust evaluation failure.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Error I was getting,
+</span><span class='line'>Domain=NSURLErrorDomain Code=-1202 "The certificate for this server is invalid. You might be connecting to a server that is pretending to be “example.com” which could put your confidential information at risk." UserInfo=0x14a730 {NSErrorFailingURLStringKey=https://example.com/, NSLocalizedRecoverySuggestion=Would you like to connect to the server anyway?, NSErrorFailingURLKey=https://example.com/, NSLocalizedDescription=The certificate for this server is invalid. You might be connecting to a server that is pretending to be “example.com” which could put your confidential information at risk., NSUnderlyingError=0x14a6c0 "The certificate for this server is invalid. You might be connecting to a server that is pretending to be “example.com” which could put your confidential information at risk.", NSURLErrorFailingURLPeerTrustErrorKey=&lt;SecTrustRef: 0x14ec00>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Apple have really good <a href="https://developer.apple.com/library/ios/technotes/tn2232/_index.html">technical note</a> on this matter.</p>
+
+<h3>NSURLSession</h3>
+
+<p>Here is how I fixed it using NSURLSession delegates,</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">URLSession:</span><span class="p">(</span><span class="bp">NSURLSession</span> <span class="o">*</span><span class="p">)</span><span class="nv">session</span> <span class="nf">task:</span><span class="p">(</span><span class="bp">NSURLSessionTask</span> <span class="o">*</span><span class="p">)</span><span class="nv">task</span> <span class="nf">didReceiveChallenge:</span><span class="p">(</span><span class="bp">NSURLAuthenticationChallenge</span> <span class="o">*</span><span class="p">)</span><span class="nv">challenge</span> <span class="nf">completionHandler:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSURLSessionAuthChallengeDisposition</span> <span class="n">disposition</span><span class="p">,</span> <span class="bp">NSURLCredential</span> <span class="o">*</span><span class="n">credential</span><span class="p">))</span><span class="nv">completionHandler</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">completionHandler</span><span class="p">(</span><span class="n">NSURLSessionAuthChallengeUseCredential</span><span class="p">,</span> <span class="p">[</span><span class="bp">NSURLCredential</span> <span class="nl">credentialForTrust</span><span class="p">:</span><span class="n">challenge</span><span class="p">.</span><span class="n">protectionSpace</span><span class="p">.</span><span class="n">serverTrust</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[NSUserDefaults Data and iOS8 Simulator]]></title>
